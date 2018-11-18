@@ -80,7 +80,7 @@ export default {
             outStr = pal.slice(0, -1).join(", ") + " and " + pal.slice(-1) + ".";
           }
           this.popularArtists = outStr;
-          this.popularTags = ptl.join(", ");
+          this.popularTags = ptl.filter(val => val).join(", ");
         })
         .catch(error => console.log(error))
         .finally(() => {

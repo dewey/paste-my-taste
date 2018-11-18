@@ -104,12 +104,14 @@ func main() {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		if len(tal) <= 3 {
+		if len(tal) < 3 {
 			http.Error(w, "not enough listening data available", http.StatusBadRequest)
 			return
 		}
+		// We only fetch the top tags for the top 4 artists right now for speed reasons
+		m := make(map[string]struct{})
 		for i, ta := range tal {
-			if i < len(tal)/3 {
+			if i < 5 {
 				tt, err := lfm.GetTopTags(ta.Mbid)
 				if err != nil {
 					continue
@@ -117,9 +119,15 @@ func main() {
 				if len(tt) > 1 {
 					ta := ta
 					ta.Genre = tt[0]
-					al = append(al, ta)
+					if _, ok := m[ta.Genre]; !ok {
+						al = append(al, ta)
+						m[ta.Genre] = struct{}{}
+					}
 				}
+			} else {
+				al = append(al, ta)
 			}
+
 		}
 		render.JSON(w, r, al)
 		return
