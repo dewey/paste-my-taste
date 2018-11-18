@@ -39,12 +39,12 @@ func main() {
 
 	t := &http.Transport{
 		Dial: (&net.Dialer{
-			Timeout: 10 * time.Second,
+			Timeout: 20 * time.Second,
 		}).Dial,
 		TLSHandshakeTimeout: 10 * time.Second,
 	}
 	c := &http.Client{
-		Timeout:   time.Second * 15,
+		Timeout:   time.Second * 30,
 		Transport: t,
 	}
 
@@ -104,15 +104,21 @@ func main() {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		for _, ta := range tal {
-			tt, err := lfm.GetTopTags(ta.Mbid)
-			if err != nil {
-				continue
-			}
-			if len(tt) > 1 {
-				ta := ta
-				ta.Genre = tt[0]
-				al = append(al, ta)
+		if len(tal) <= 3 {
+			http.Error(w, "not enough listening data available", http.StatusBadRequest)
+			return
+		}
+		for i, ta := range tal {
+			if i < len(tal)/3 {
+				tt, err := lfm.GetTopTags(ta.Mbid)
+				if err != nil {
+					continue
+				}
+				if len(tt) > 1 {
+					ta := ta
+					ta.Genre = tt[0]
+					al = append(al, ta)
+				}
 			}
 		}
 		render.JSON(w, r, al)

@@ -100,6 +100,7 @@ func (c *Client) GetTopArtists(username string, period string, limit int) ([]Top
 
 // GetTopTags gets the top tags for an artist from the Last.FM API
 func (c *Client) GetTopTags(mbid string) ([]string, error) {
+	fmt.Println("GetTopTags()")
 	req, err := http.NewRequest("GET", fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=artist.gettoptags&mbid=%s&api_key=%s&format=json", mbid, c.APIKey), nil)
 	if err != nil {
 		return nil, err
