@@ -1,0 +1,55 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "DriMqHJDIx3WqJIEhMPrG23pE4Q=",
+			"path": "github.com/caarlos0/env",
+			"revision": "bc122c26dc2d72f6904a9e0cb940ca508660067c",
+			"revisionTime": "2018-07-02T19:56:40Z"
+		},
+		{
+			"checksumSHA1": "YODbzvhUr0Tzp2/MkXflXph2hdY=",
+			"path": "github.com/go-chi/chi",
+			"revision": "e83ac2304db3c50cf03d96a2fcd39009d458bc35",
+			"revisionTime": "2017-12-22T16:11:33Z"
+		},
+		{
+			"checksumSHA1": "n9ry/OHiteTTjZOeJHTrEwRSnms=",
+			"path": "github.com/go-chi/cors",
+			"revision": "07727c846d14299758e54a275dd8c81353c01960",
+			"revisionTime": "2018-08-16T15:23:45Z"
+		},
+		{
+			"checksumSHA1": "A2pvBObG7boB0BjpoUj3sBZAAsg=",
+			"path": "github.com/go-chi/render",
+			"revision": "8c8c7a43d054b536d7e18e82c4331e7258f211a2",
+			"revisionTime": "2017-12-31T23:41:54Z"
+		},
+		{
+			"checksumSHA1": "/UJOUopaUR3wpVgoq6A6pxSldPA=",
+			"path": "github.com/go-kit/kit/log",
+			"revision": "9813199613524eb386b05500880c1e26d2fc3da6",
+			"revisionTime": "2017-07-15T18:35:20Z"
+		},
+		{
+			"checksumSHA1": "t7aTpDH0h4BZcGU0KkUr14QQG2w=",
+			"path": "github.com/go-kit/kit/log/level",
+			"revision": "9813199613524eb386b05500880c1e26d2fc3da6",
+			"revisionTime": "2017-07-15T18:35:20Z"
+		},
+		{
+			"checksumSHA1": "KxX/Drph+byPXBFIXaCZaCOAnrU=",
+			"path": "github.com/go-logfmt/logfmt",
+			"revision": "390ab7935ee28ec6b286364bba9b4dd6410cb3d5",
+			"revisionTime": "2016-11-15T14:25:13Z"
+		},
+		{
+			"checksumSHA1": "KZ3QD2QgUS4RcoKiA3mn5pSlJxQ=",
+			"path": "github.com/go-stack/stack",
+			"revision": "54be5f394ed2c3e19dac9134a40a95ba5a017f7b",
+			"revisionTime": "2017-07-10T16:04:46Z"
+		}
+	],
+	"rootPath": "github.com/dewey/paste-my-taste"
+}

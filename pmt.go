@@ -62,8 +62,16 @@ func main() {
 		// MaxAge:           300, // Maximum value not ignored by any of major browsers
 	})
 	r.Use(cors.Handler)
-	r.Handle("/*", http.FileServer(http.Dir("./web/dist")))
 
+	// TODO(dewey): Figure out if there's a better way
+	var assetPath string
+	switch cfg.Environment {
+	case "production":
+		assetPath = "/web/dist"
+	default:
+		assetPath = "./web/dist"
+	}
+	r.Handle("/*", http.FileServer(http.Dir(assetPath)))
 	r.Get("/api/lastfm/{username}", func(w http.ResponseWriter, r *http.Request) {
 		var username, period string
 		var limit int
