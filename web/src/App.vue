@@ -9,7 +9,7 @@
                 <p>Paste My Taste generates an easily shareable list of top artists and genre information from your Last.FM account for a given timespan.</p>
             </article>
         </section>
-        <section>
+        <section class="mw7 center">
           <PopularArtists msg="Paste Your Taste for Last.FM"/>
         </section>
         <section class="mw7 center lh-copy">
@@ -36,3 +36,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+#app {
+  height: 100vh;
+}
+</style>

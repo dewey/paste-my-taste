@@ -72,7 +72,6 @@ type TopArtist struct {
 
 // GetTopArtists gets the top artist of a user from Last.FM
 func (c *Client) GetTopArtists(username string, period string, limit int) ([]TopArtist, error) {
-	fmt.Println(fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=%s&api_key=%s&format=json&period=%s&limit=%d", username, c.APIKey, period, limit))
 	req, err := http.NewRequest("GET", fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=%s&api_key=%s&format=json&period=%s&limit=%d", username, c.APIKey, period, limit), nil)
 	if err != nil {
 		return nil, err
@@ -100,7 +99,6 @@ func (c *Client) GetTopArtists(username string, period string, limit int) ([]Top
 
 // GetTopTags gets the top tags for an artist from the Last.FM API
 func (c *Client) GetTopTags(mbid string) ([]string, error) {
-	fmt.Println("GetTopTags()")
 	req, err := http.NewRequest("GET", fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=artist.gettoptags&mbid=%s&api_key=%s&format=json", mbid, c.APIKey), nil)
 	if err != nil {
 		return nil, err

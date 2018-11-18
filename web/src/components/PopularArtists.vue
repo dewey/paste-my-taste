@@ -1,12 +1,12 @@
 <template>
-  <div class="pa4-l">
+  <div>
     <form class="mw7 center pa4 br2-ns" @submit.prevent="getPopularArtists">
       <fieldset class="cf bn ma0 pa0">
         <div class="cf">         
           <div class="flex">
             <div class="w-45 pr3">
               <label class="clip" for="email-address">Last.FM username</label>
-              <input class="f6 f5-l input-reset bn fl black-80 bg-white pa3 lh-solid w-100 br2-ns br--left-ns" placeholder="Last.FM Username" type="text" name="username" v-model="username">
+              <input class="f6 f5-l input-reset bn fl black-80 bg-white pa3 lh-solid w-100 br2-ns" placeholder="Last.FM Username" type="text" name="username" v-model="username">
             </div>
             <div class="w-25 pr3">
               <v-select v-model="period" :options="[{label: 'Overall', value: 'overall'},{label: '7 days', value: '7day'},{label: '1 Month', value: '1month'},{label: '3 Months', value: '3month'},{label: '6 Months', value: '6month'}, {label: '12 Months', value: '12month'}]"></v-select>
@@ -15,7 +15,7 @@
               <v-select v-model="limit" :options="[{label: '10 days', value: '10'},{label: '15 days', value: '15'},{label: '20 days', value: '20'},{label: '25 days', value: '25'}]"></v-select>
             </div>
             <div class="w-20">
-              <input class="f6 f5-l button-reset fl pv3 tc bn bg-animate bg-black-70 hover-bg-black white pointer w-100 br2-ns br--right-ns" type="submit" value="Generate">
+              <input class="f6 f5-l button-reset fl pv3 tc bn bg-animate bg-black-70 hover-bg-black white pointer w-100 br2-ns" type="submit" value="Generate">
             </div>
           </div>
         </div>
@@ -116,7 +116,9 @@ export default {
   color: black;
 }
 
-.v-select{
+div.v-select{
   background-color: white;
+  border-radius: 4px;
 }
+
 </style>

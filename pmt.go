@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"net/http/httputil"
 	"os"
 	"strconv"
 	"strings"
@@ -51,34 +50,27 @@ func main() {
 	lfm := lastfm.New(c, cfg.APIKey)
 
 	r := chi.NewRouter()
-	r.Use(render.SetContentType(render.ContentTypeJSON))
+	// r.Use(render.SetContentType(render.ContentTypeJSON))
 	cors := cors.New(cors.Options{
 		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
 		AllowedOrigins: []string{"*"},
 		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
-		// AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedMethods: []string{"GET", "OPTIONS"},
 		// AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		// ExposedHeaders:   []string{"Link"},
 		// AllowCredentials: true,
 		// MaxAge:           300, // Maximum value not ignored by any of major browsers
 	})
 	r.Use(cors.Handler)
-
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-	})
+	r.Handle("/*", http.FileServer(http.Dir("./web/dist")))
 
 	r.Get("/api/lastfm/{username}", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("api hit")
 		var username, period string
 		var limit int
 		username = chi.URLParam(r, "username")
 		if username == "" {
 			http.Error(w, "username not allowed to be empty", http.StatusBadRequest)
 			return
-		}
-		b, err := httputil.DumpRequest(r, true)
-		if err == nil {
-			fmt.Println(string(b))
 		}
 		q := r.URL.Query()
 		if q.Get("period") != "" {
@@ -131,10 +123,6 @@ func main() {
 		}
 		render.JSON(w, r, al)
 		return
-	})
-
-	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("nothing to see here"))
 	})
 
 	l.Log("msg", fmt.Sprintf("paste-my-taste listening on http://localhost:%d", cfg.Port))
