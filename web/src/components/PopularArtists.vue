@@ -14,7 +14,7 @@
               <v-select v-model="period" :options="[{label: 'Overall', value: 'overall'},{label: '7 days', value: '7day'},{label: '1 Month', value: '1month'},{label: '3 Months', value: '3month'},{label: '6 Months', value: '6month'}, {label: '12 Months', value: '12month'}]"></v-select>
             </div> 
             <div class="w-25 pr3">
-              <v-select v-model="limit" :options="[{label: '10 days', value: '10'},{label: '15 days', value: '15'},{label: '20 days', value: '20'},{label: '25 days', value: '25'}]"></v-select>
+              <v-select v-model="limit" :options="[{label: '10 artists', value: '10'},{label: '15 artists', value: '15'},{label: '20 artists', value: '20'},{label: '25 artists', value: '25'}]"></v-select>
             </div>
             <div class="w-30 pr3" >
               <div class="flex items-center pv2">
