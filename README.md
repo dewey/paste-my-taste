@@ -2,9 +2,12 @@
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dewey/paste-my-taste/LICENSE)
 
-Is a replacement for the now defunct Paste My Taste site that I build to play around with VueJS. Additionally to providing
-the same features as the old site this one also includes the links to the artists on Last.FM in a Reddit-compatible post
-format. Feature requests are welcome! 👨🏻‍💻
+Is a replacement for the now defunct Paste My Taste site. I build this replacement to play around with VueJS. Additionally
+to providing the same features as the old site this one also includes the links to the artists on Last.FM in a Reddit-compatible post format. Feature requests are welcome! 👨🏻‍💻
+
+**It's currently available here: [pastemytaste.com](https://pastemytaste.com)**
+
+If you need a demo username try mine: [apfeltalkdewey](https://www.last.fm/user/apfeltalkdewey) (No judging, my account is more than 10 years old and you can't change your username on Last.FM 🤔
 
 
 ## Configuration and Operation
@@ -13,7 +16,7 @@ format. Feature requests are welcome! 👨🏻‍💻
 
 The following environment variables are available, they all have sensible defaults and don't need to be set explicity, except the API token.
 
-- `API_TOKEN`: The Last.FM API token
+- `API_KEY`: The Last.FM API key
 - `ENVIRONMENT`: Environment can be `prod` or `develop`. `develop` sets the loglevel to `info` (Default: `develop`)
 - `PORT`: Port that PMT is running on (Default: `8080`)
 
