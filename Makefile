@@ -10,10 +10,12 @@ test:
 	go test ./... -v
 
 image-push-staging:
+	npm --prefix web/ run build
 	docker build -t $(IMAGE_NAME):staging .
 	docker push $(IMAGE_NAME):staging
 
 image-push:
+	npm --prefix web/ run build
 	docker build -t $(IMAGE_NAME):latest .
 	docker tag $(IMAGE_NAME):latest $(IMAGE_NAME):$(VERSION_DOCKER)
 	docker push $(IMAGE_NAME):latest
