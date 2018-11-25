@@ -119,13 +119,12 @@ func (s *service) GenerateTaste(username string, period string, limit int) ([]la
 				continue
 			}
 			cacheHitTotalCounter.Add(1)
-
 		} else {
 			al = append(al, ta)
 		}
 
 		// If we have top tags in our storage already we add them to the artist, or else append the artist without tags
-		if len(tt) > 1 {
+		if tt != "" {
 			ta.Genre = tt
 			if _, ok := m[ta.Genre]; !ok {
 				al = append(al, ta)
@@ -137,5 +136,5 @@ func (s *service) GenerateTaste(username string, period string, limit int) ([]la
 	}
 	duration := time.Since(start)
 	fetchDurationHistogram.WithLabelValues(period).Observe(duration.Seconds())
-	return tal, nil
+	return al, nil
 }
