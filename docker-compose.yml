@@ -7,3 +7,7 @@ services:
     environment:
       - ENVIRONMENT=prod
       - API_KEY=
+      - STORAGE_BACKEND=persistent
+      - STORAGE_PATH=/pmt-data
+    volumes:
+     - /home/dewey/services/pmt/pmt-data:/pmt-data

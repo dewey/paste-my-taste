@@ -5,16 +5,17 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 
-	"github.com/go-chi/cors"
-	"github.com/go-chi/render"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/caarlos0/env"
+	"github.com/dewey/paste-my-taste/api"
 	"github.com/dewey/paste-my-taste/client/lastfm"
 	"github.com/dewey/paste-my-taste/config"
+	"github.com/dewey/paste-my-taste/store"
 	"github.com/go-chi/chi"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
@@ -49,89 +50,26 @@ func main() {
 
 	lfm := lastfm.New(c, cfg.APIKey)
 
-	r := chi.NewRouter()
-	// r.Use(render.SetContentType(render.ContentTypeJSON))
-	cors := cors.New(cors.Options{
-		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
-		AllowedOrigins: []string{"*"},
-		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
-		AllowedMethods: []string{"GET", "OPTIONS"},
-		// AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-		// ExposedHeaders:   []string{"Link"},
-		// AllowCredentials: true,
-		// MaxAge:           300, // Maximum value not ignored by any of major browsers
-	})
-	r.Use(cors.Handler)
+	storageRepo, err := store.NewStoreBackend(cfg)
+	if err != nil {
+		return
+	}
+
+	as := api.NewService(l, cfg, lfm, storageRepo)
 
 	// TODO(dewey): Figure out if there's a better way
 	var assetPath string
 	switch cfg.Environment {
-	case "production":
+	case "prod":
 		assetPath = "/web/dist"
 	default:
 		assetPath = "./web/dist"
 	}
+
+	r := chi.NewRouter()
 	r.Handle("/*", http.FileServer(http.Dir(assetPath)))
-	r.Get("/api/lastfm/{username}", func(w http.ResponseWriter, r *http.Request) {
-		var username, period string
-		var limit int
-		username = chi.URLParam(r, "username")
-		if username == "" {
-			http.Error(w, "username not allowed to be empty", http.StatusBadRequest)
-			return
-		}
-		q := r.URL.Query()
-		if q.Get("period") != "" {
-			period = q.Get("period")
-		} else {
-			period = "1month"
-		}
-
-		if q.Get("limit") != "" {
-			l, err := strconv.Atoi(q.Get("limit"))
-			if err != nil {
-				http.Error(w, "limit has to be an integer", http.StatusInternalServerError)
-				return
-			}
-			limit = l
-		} else {
-			limit = 15
-		}
-
-		var al []lastfm.TopArtist
-		tal, err := lfm.GetTopArtists(username, period, limit)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		if len(tal) < 3 {
-			http.Error(w, "not enough listening data available", http.StatusBadRequest)
-			return
-		}
-		// We only fetch the top tags for the top 4 artists right now for speed reasons
-		m := make(map[string]struct{})
-		for i, ta := range tal {
-			if i < 5 {
-				tt, err := lfm.GetTopTags(ta.Mbid)
-				if err != nil {
-					continue
-				}
-				if len(tt) > 1 {
-					ta := ta
-					ta.Genre = tt[0]
-					if _, ok := m[ta.Genre]; !ok {
-						al = append(al, ta)
-						m[ta.Genre] = struct{}{}
-					}
-				}
-			} else {
-				al = append(al, ta)
-			}
-
-		}
-		render.JSON(w, r, al)
-		return
-	})
+	r.Handle("/metrics", promhttp.Handler())
+	r.Mount("/api", prometheus.InstrumentHandler("api", api.NewHandler(*as)))
 
 	l.Log("msg", fmt.Sprintf("paste-my-taste listening on http://localhost:%d", cfg.Port))
 	err = http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), r)

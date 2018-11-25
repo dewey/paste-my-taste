@@ -2,6 +2,7 @@ package lastfm
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -45,6 +46,8 @@ type topArtists struct {
 			Total      string `json:"total"`
 		} `json:"@attr"`
 	} `json:"topartists"`
+	Error   int    `json:"error,omitempty"`
+	Message string `json:"message,omitempty"`
 }
 
 // topTags contains the top tags globally for an artist
@@ -85,6 +88,12 @@ func (c *Client) GetTopArtists(username string, period string, limit int) ([]Top
 	if err := json.NewDecoder(resp.Body).Decode(&ta); err != nil {
 		return nil, err
 	}
+
+	// Handle Last.FM API errors
+	if ta.Error != 0 {
+		return nil, errors.New(ta.Message)
+	}
+
 	var tal []TopArtist
 	for _, artist := range ta.Topartists.Artist {
 		tal = append(tal, TopArtist{
@@ -94,6 +103,7 @@ func (c *Client) GetTopArtists(username string, period string, limit int) ([]Top
 			URL:       artist.URL,
 		})
 	}
+
 	return tal, nil
 }
 

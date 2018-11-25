@@ -5,7 +5,8 @@ export default {
         return Api().get('/api/lastfm/' + params.username, {
             params: {
                 limit: params.limit,
-                period: params.period
+                period: params.period,
+                linkArtists: params.linkArtists,
             }
         }).then(response => {
             return response.data
