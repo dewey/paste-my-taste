@@ -131,8 +131,6 @@ func (s *service) GenerateTaste(username string, period string, limit int) ([]la
 				al = append(al, ta)
 				m[ta.Genre] = struct{}{}
 			}
-		} else {
-			al = append(al, ta)
 		}
 	}
 	duration := time.Since(start)
