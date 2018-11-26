@@ -84,7 +84,8 @@ func (s *service) GenerateTaste(username string, period string, limit int) ([]la
 	var al []lastfm.TopArtist
 	tal, err := s.client.GetTopArtists(username, period, limit)
 	if err != nil {
-		return nil, err
+		s.l.Log("err", err)
+		return nil, errors.New("error getting top artists from Last.FM")
 	}
 	if len(tal) < 3 {
 		return nil, errors.New("not enough listening data available")
