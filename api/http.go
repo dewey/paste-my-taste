@@ -7,6 +7,9 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // NewHandler initializes a new router
@@ -27,7 +30,18 @@ func NewHandler(s service) *chi.Mux {
 
 	// Public routes
 	r.Group(func(r chi.Router) {
-		r.Get("/lastfm/{username}", getLFMTaste(s))
+		r.Get("/lastfm/{username}", promhttp.InstrumentHandlerCounter(
+			promauto.NewCounterVec(
+				prometheus.CounterOpts{
+					Namespace: "pmt",
+					Subsystem: "api_lastfm",
+					Name:      "username_reqs_total",
+					Help:      "Total number of requests by HTTP code",
+				},
+				[]string{"code", "method"},
+			),
+			getLFMTaste(s),
+		))
 	})
 
 	return r
