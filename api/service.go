@@ -49,7 +49,7 @@ var fetchDurationHistogram = prometheus.NewHistogramVec(
 		Help:      "Time to fetch data from Last.FM API.",
 		Buckets:   []float64{5, 10, 20, 60, 120},
 	},
-	[]string{"period", "job"},
+	[]string{"period", "task"},
 )
 
 var cacheHitTotalCounter = prometheus.NewCounter(
