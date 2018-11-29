@@ -50,6 +50,26 @@ type topArtists struct {
 	Message string `json:"message,omitempty"`
 }
 
+// weeklyArtist contains the top artists of a given timespan
+type weeklyArtist struct {
+	Weeklyartistchart struct {
+		Artist []struct {
+			Name      string `json:"name"`
+			Mbid      string `json:"mbid"`
+			Playcount string `json:"playcount"`
+			URL       string `json:"url"`
+			Attr      struct {
+				Rank string `json:"rank"`
+			} `json:"@attr"`
+		} `json:"artist"`
+		Attr struct {
+			User string `json:"user"`
+			From string `json:"from"`
+			To   string `json:"to"`
+		} `json:"@attr"`
+	} `json:"weeklyartistchart"`
+}
+
 // topTags contains the top tags globally for an artist
 type topTags struct {
 	Toptags struct {
@@ -96,6 +116,34 @@ func (c *Client) GetTopArtists(username string, period string, limit int) ([]Top
 
 	var tal []TopArtist
 	for _, artist := range ta.Topartists.Artist {
+		tal = append(tal, TopArtist{
+			Name:      artist.Name,
+			Playcount: artist.Playcount,
+			Mbid:      artist.Mbid,
+			URL:       artist.URL,
+		})
+	}
+
+	return tal, nil
+}
+
+// GetWeeklyArtistChart returns the top artists from a given time span
+func (c *Client) GetWeeklyArtistChart(username string, from, to int64) ([]TopArtist, error) {
+	req, err := http.NewRequest("GET", fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=user.getweeklyartistchart&user=%s&api_key=%s&format=json&from=%d&to=%d", username, c.APIKey, from, to), nil)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	var wa weeklyArtist
+	if err := json.NewDecoder(resp.Body).Decode(&wa); err != nil {
+		return nil, err
+	}
+	var tal []TopArtist
+	for _, artist := range wa.Weeklyartistchart.Artist {
 		tal = append(tal, TopArtist{
 			Name:      artist.Name,
 			Playcount: artist.Playcount,

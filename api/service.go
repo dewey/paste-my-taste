@@ -101,11 +101,25 @@ var tasteGenerateDuration = prometheus.NewHistogramVec(
 func (s *service) GenerateTaste(username string, period string, limit int) ([]lastfm.TopArtist, error) {
 	start := time.Now()
 	var al []lastfm.TopArtist
-	tal, err := s.client.GetTopArtists(username, period, limit)
-	if err != nil {
-		s.l.Log("err", err)
-		return nil, errors.New("error getting top artists from Last.FM")
+	var tal []lastfm.TopArtist
+	var err error
+
+	// Last.FM doesn't have a two week parameter so we have to use another route that supports ranges
+	switch period {
+	case "2week":
+		tal, err = s.client.GetWeeklyArtistChart(username, start.AddDate(0, 0, -14).Unix(), start.Unix())
+		if err != nil {
+			s.l.Log("err", err)
+			return nil, errors.New("error getting weekly top artists from Last.FM")
+		}
+	default:
+		tal, err = s.client.GetTopArtists(username, period, limit)
+		if err != nil {
+			s.l.Log("err", err)
+			return nil, errors.New("error getting top artists from Last.FM")
+		}
 	}
+
 	fetchDurationHistogram.WithLabelValues(period, "get_top_artists").Observe(time.Since(start).Seconds())
 	if len(tal) < 3 {
 		return nil, errors.New("not enough listening data available")
