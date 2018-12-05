@@ -107,7 +107,7 @@ func (s *service) GenerateTaste(username string, period string, limit int) ([]la
 	// Last.FM doesn't have a two week parameter so we have to use another route that supports ranges
 	switch period {
 	case "2week":
-		tal, err = s.client.GetWeeklyArtistChart(username, start.AddDate(0, 0, -14).Unix(), start.Unix())
+		tal, err = s.client.GetWeeklyArtistChart(username, start.AddDate(0, 0, -14).Unix(), start.Unix(), limit)
 		if err != nil {
 			s.l.Log("err", err)
 			return nil, errors.New("error getting weekly top artists from Last.FM")

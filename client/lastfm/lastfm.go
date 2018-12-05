@@ -128,7 +128,7 @@ func (c *Client) GetTopArtists(username string, period string, limit int) ([]Top
 }
 
 // GetWeeklyArtistChart returns the top artists from a given time span
-func (c *Client) GetWeeklyArtistChart(username string, from, to int64) ([]TopArtist, error) {
+func (c *Client) GetWeeklyArtistChart(username string, from, to int64, limit int) ([]TopArtist, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=user.getweeklyartistchart&user=%s&api_key=%s&format=json&from=%d&to=%d", username, c.APIKey, from, to), nil)
 	if err != nil {
 		return nil, err
@@ -143,13 +143,15 @@ func (c *Client) GetWeeklyArtistChart(username string, from, to int64) ([]TopArt
 		return nil, err
 	}
 	var tal []TopArtist
-	for _, artist := range wa.Weeklyartistchart.Artist {
-		tal = append(tal, TopArtist{
-			Name:      artist.Name,
-			Playcount: artist.Playcount,
-			Mbid:      artist.Mbid,
-			URL:       artist.URL,
-		})
+	for i, artist := range wa.Weeklyartistchart.Artist {
+		if i <= limit {
+			tal = append(tal, TopArtist{
+				Name:      artist.Name,
+				Playcount: artist.Playcount,
+				Mbid:      artist.Mbid,
+				URL:       artist.URL,
+			})
+		}
 	}
 
 	return tal, nil
