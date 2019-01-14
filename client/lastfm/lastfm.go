@@ -25,25 +25,25 @@ func New(c *http.Client, apiKey string) *Client {
 type topArtists struct {
 	Topartists struct {
 		Artist []struct {
-			Name       string `json:"name"`
-			Playcount  string `json:"playcount"`
-			Mbid       string `json:"mbid"`
-			URL        string `json:"url"`
-			Streamable string `json:"streamable"`
-			Image      []struct {
-				Text string `json:"#text"`
-				Size string `json:"size"`
-			} `json:"image"`
 			Attr struct {
-				Rank string `json:"rank"`
+				Rank int `json:"rank"`
 			} `json:"@attr"`
+			Mbid      string `json:"mbid"`
+			URL       string `json:"url"`
+			Playcount int    `json:"playcount"`
+			Image     []struct {
+				Size string `json:"size"`
+				Text string `json:"#text"`
+			} `json:"image"`
+			Name       string `json:"name"`
+			Streamable int    `json:"streamable"`
 		} `json:"artist"`
 		Attr struct {
+			Page       int    `json:"page"`
+			PerPage    int    `json:"perPage"`
 			User       string `json:"user"`
-			Page       string `json:"page"`
-			PerPage    string `json:"perPage"`
-			TotalPages string `json:"totalPages"`
-			Total      string `json:"total"`
+			Total      int    `json:"total"`
+			TotalPages int    `json:"totalPages"`
 		} `json:"@attr"`
 	} `json:"topartists"`
 	Error   int    `json:"error,omitempty"`
@@ -54,18 +54,23 @@ type topArtists struct {
 type weeklyArtist struct {
 	Weeklyartistchart struct {
 		Artist []struct {
-			Name      string `json:"name"`
-			Mbid      string `json:"mbid"`
-			Playcount string `json:"playcount"`
-			URL       string `json:"url"`
-			Attr      struct {
-				Rank string `json:"rank"`
+			Attr struct {
+				Rank int `json:"rank"`
 			} `json:"@attr"`
+			Mbid      string `json:"mbid"`
+			Playcount int    `json:"playcount"`
+			Name      string `json:"name"`
+			URL       string `json:"url"`
 		} `json:"artist"`
 		Attr struct {
-			User string `json:"user"`
-			From string `json:"from"`
-			To   string `json:"to"`
+			Message    string `json:"message,omitempty"`
+			Page       int    `json:"page"`
+			To         int    `json:"to"`
+			PerPage    int    `json:"perPage"`
+			User       string `json:"user"`
+			From       int    `json:"from"`
+			Total      int    `json:"total"`
+			TotalPages int    `json:"totalPages"`
 		} `json:"@attr"`
 	} `json:"weeklyartistchart"`
 }
@@ -87,7 +92,7 @@ type topTags struct {
 // TopArtist is an artist and it's main genre
 type TopArtist struct {
 	Name      string `json:"name"`
-	Playcount string `json:"playcount"`
+	Playcount int    `json:"playcount"`
 	Mbid      string `json:"mbid"`
 	URL       string `json:"url"`
 	Genre     string `json:"genre,omitempty"`
