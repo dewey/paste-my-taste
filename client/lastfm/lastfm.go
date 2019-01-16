@@ -35,8 +35,7 @@ type topArtists struct {
 				Size string `json:"size"`
 				Text string `json:"#text"`
 			} `json:"image"`
-			Name       string `json:"name"`
-			Streamable int    `json:"streamable"`
+			Name string `json:"name"`
 		} `json:"artist"`
 		Attr struct {
 			Page       int    `json:"page"`
