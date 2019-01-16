@@ -28,9 +28,9 @@ type topArtists struct {
 			Attr struct {
 				Rank int `json:"rank"`
 			} `json:"@attr"`
-			Mbid      string `json:"mbid"`
-			URL       string `json:"url"`
-			Playcount int    `json:"playcount"`
+			Mbid      string      `json:"mbid"`
+			URL       string      `json:"url"`
+			Playcount json.Number `json:"playcount"`
 			Image     []struct {
 				Size string `json:"size"`
 				Text string `json:"#text"`
@@ -57,10 +57,10 @@ type weeklyArtist struct {
 			Attr struct {
 				Rank int `json:"rank"`
 			} `json:"@attr"`
-			Mbid      string `json:"mbid"`
-			Playcount int    `json:"playcount"`
-			Name      string `json:"name"`
-			URL       string `json:"url"`
+			Mbid      string      `json:"mbid"`
+			Playcount json.Number `json:"playcount"`
+			Name      string      `json:"name"`
+			URL       string      `json:"url"`
 		} `json:"artist"`
 		Attr struct {
 			Message    string `json:"message,omitempty"`
@@ -121,9 +121,13 @@ func (c *Client) GetTopArtists(username string, period string, limit int) ([]Top
 
 	var tal []TopArtist
 	for _, artist := range ta.Topartists.Artist {
+		pc, err := artist.Playcount.Int64()
+		if err != nil {
+			continue
+		}
 		tal = append(tal, TopArtist{
 			Name:      artist.Name,
-			Playcount: artist.Playcount,
+			Playcount: int(pc),
 			Mbid:      artist.Mbid,
 			URL:       artist.URL,
 		})
@@ -150,9 +154,13 @@ func (c *Client) GetWeeklyArtistChart(username string, from, to int64, limit int
 	var tal []TopArtist
 	for i, artist := range wa.Weeklyartistchart.Artist {
 		if i <= limit {
+			pc, err := artist.Playcount.Int64()
+			if err != nil {
+				continue
+			}
 			tal = append(tal, TopArtist{
 				Name:      artist.Name,
-				Playcount: artist.Playcount,
+				Playcount: int(pc),
 				Mbid:      artist.Mbid,
 				URL:       artist.URL,
 			})
