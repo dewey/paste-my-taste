@@ -34,13 +34,6 @@ type topArtists struct {
 			} `json:"image"`
 			Name string `json:"name"`
 		} `json:"artist"`
-		Attr struct {
-			Page       int    `json:"page"`
-			PerPage    int    `json:"perPage"`
-			User       string `json:"user"`
-			Total      int    `json:"total"`
-			TotalPages int    `json:"totalPages"`
-		} `json:"@attr"`
 	} `json:"topartists"`
 	Error   int    `json:"error,omitempty"`
 	Message string `json:"message,omitempty"`
@@ -55,16 +48,6 @@ type weeklyArtist struct {
 			Name      string      `json:"name"`
 			URL       string      `json:"url"`
 		} `json:"artist"`
-		Attr struct {
-			Message    string `json:"message,omitempty"`
-			Page       int    `json:"page"`
-			To         int    `json:"to"`
-			PerPage    int    `json:"perPage"`
-			User       string `json:"user"`
-			From       int    `json:"from"`
-			Total      int    `json:"total"`
-			TotalPages int    `json:"totalPages"`
-		} `json:"@attr"`
 	} `json:"weeklyartistchart"`
 }
 
