@@ -25,9 +25,6 @@ func New(c *http.Client, apiKey string) *Client {
 type topArtists struct {
 	Topartists struct {
 		Artist []struct {
-			Attr struct {
-				Rank int `json:"rank"`
-			} `json:"@attr"`
 			Mbid      string      `json:"mbid"`
 			URL       string      `json:"url"`
 			Playcount json.Number `json:"playcount"`
@@ -53,9 +50,6 @@ type topArtists struct {
 type weeklyArtist struct {
 	Weeklyartistchart struct {
 		Artist []struct {
-			Attr struct {
-				Rank int `json:"rank"`
-			} `json:"@attr"`
 			Mbid      string      `json:"mbid"`
 			Playcount json.Number `json:"playcount"`
 			Name      string      `json:"name"`
