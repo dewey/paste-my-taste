@@ -5,9 +5,11 @@
 Is a replacement for the now defunct Paste My Taste site. I build this replacement to play around with VueJS. Additionally
 to providing the same features as the old site this one also includes the links to the artists on Last.FM in a Reddit-compatible post format. Feature requests are welcome! 👨🏻‍💻
 
-**It's currently available here: [pastemytaste.com](https://pastemytaste.com)**
+**It's currently available here: [pastemytaste.site](https://pastemytaste.site)**
 
-If you need a demo username try mine: [apfeltalkdewey](https://www.last.fm/user/apfeltalkdewey) (No judging, my account is more than 10 years old and you can't change your username on Last.FM 🤔
+Up until December 2022 it was available on pastemytaste[.]com but unfortunately due to an accident the domain expired.
+
+If you need a demo username try mine: [apfeltalkdewey](https://www.last.fm/user/tehwey) (No judging, my account is more than 10 years old and you can't change your username on Last.FM 🤔
 
 
 ## Configuration and Operation
