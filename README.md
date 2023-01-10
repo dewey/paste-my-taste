@@ -9,7 +9,7 @@ to providing the same features as the old site this one also includes the links 
 
 Up until December 2022 it was available on pastemytaste[.]com but unfortunately due to an accident the domain expired.
 
-If you need a demo username try mine: [apfeltalkdewey](https://www.last.fm/user/tehwey) (No judging, my account is more than 10 years old and you can't change your username on Last.FM 🤔
+If you need a demo username try mine: [tehwey](https://www.last.fm/user/tehwey)
 
 
 ## Configuration and Operation
