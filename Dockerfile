@@ -14,6 +14,7 @@ ENV GOGC=off
 
 # Add our code
 ADD ./ $GOPATH/src/github.com/dewey/paste-my-taste
+ADD /web/dist /web/dist
 
 # build
 WORKDIR $GOPATH/src/github.com/dewey/paste-my-taste
