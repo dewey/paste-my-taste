@@ -81,6 +81,5 @@ func getLFMTaste(s service) http.HandlerFunc {
 			return
 		}
 		render.JSON(w, r, al)
-		return
 	}
 }

@@ -8,7 +8,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/caarlos0/env"
@@ -69,7 +68,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Handle("/*", http.FileServer(http.Dir(assetPath)))
 	r.Handle("/metrics", promhttp.Handler())
-	r.Mount("/api", prometheus.InstrumentHandler("api", api.NewHandler(*as)))
+	r.Mount("/api", api.NewHandler(*as))
 
 	l.Log("msg", fmt.Sprintf("paste-my-taste listening on http://localhost:%d", cfg.Port))
 	err = http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), r)
