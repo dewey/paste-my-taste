@@ -15,6 +15,7 @@ ENV GOGC=off
 # Add our code
 ADD ./ $GOPATH/src/github.com/dewey/paste-my-taste
 ADD /web/dist /web/dist
+ADD /nginx.conf.sigil /nginx.conf.sigil
 
 # build
 WORKDIR $GOPATH/src/github.com/dewey/paste-my-taste
