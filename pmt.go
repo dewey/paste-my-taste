@@ -53,6 +53,9 @@ func main() {
 	if err != nil {
 		return
 	}
+	if err := storageRepo.Save("test", "test"); err != nil {
+		l.Log("msg", fmt.Sprintf("failed to save test key: %s,", err), "backend", cfg.StorageBackend)
+	}
 
 	as := api.NewService(l, cfg, lfm, storageRepo)
 
