@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/go-kit/kit/log"
@@ -138,13 +139,17 @@ func (s *service) GenerateTaste(username string, period string, limit int) ([]la
 			if err != nil {
 				// If we don't have it in our store we get the unique top tag for the first 4 artists
 				start = time.Now()
-				tt, err := s.client.GetTopTags(ta.Mbid)
+
+				// We try to get the top tags by mbid, but if this doesn't work because of the Last.FM bug we fallback to the artist name:
+				// https://www.reddit.com/r/lastfm/comments/1g9suo3/api_problem/
+				tt, err := s.client.GetTopTags(ta.Mbid, ta.Name)
 				fetchDurationHistogram.WithLabelValues(period, "get_top_tags").Observe(time.Since(start).Seconds())
 				cacheMissTotalCounter.Add(1)
 				if err != nil {
 					s.l.Log("err", err)
 					continue
 				}
+				// If we don't get any top tags, we just append the artist without tags
 				if len(tt) > 1 {
 					ta.Genre = tt[0]
 					if _, ok := m[ta.Genre]; !ok {
@@ -152,8 +157,13 @@ func (s *service) GenerateTaste(username string, period string, limit int) ([]la
 						m[ta.Genre] = struct{}{}
 					}
 					// We store the newly fetched information in our storage backend so we don't have to fetch it again for the next user
-					s.storageRepository.Save(ta.Mbid, tt[0])
+					if err := s.storageRepository.Save(ta.Mbid, tt[0]); err != nil {
+						s.l.Log("msg", fmt.Sprintf("failed to save artist key: %s,", err), "backend", s.cfg.StorageBackend)
+					}
+				} else {
+					al = append(al, ta)
 				}
+
 				continue
 			}
 			cacheHitTotalCounter.Add(1)

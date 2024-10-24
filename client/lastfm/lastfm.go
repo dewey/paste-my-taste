@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 // Client contains everything needed for a Last.FM client
@@ -76,7 +77,8 @@ type TopArtist struct {
 
 // GetTopArtists gets the top artist of a user from Last.FM
 func (c *Client) GetTopArtists(username string, period string, limit int) ([]TopArtist, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=%s&api_key=%s&format=json&period=%s&limit=%d", username, c.APIKey, period, limit), nil)
+	call := fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=%s&api_key=%s&format=json&period=%s&limit=%d", username, c.APIKey, period, limit)
+	req, err := http.NewRequest("GET", call, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -146,9 +148,29 @@ func (c *Client) GetWeeklyArtistChart(username string, from, to int64, limit int
 	return tal, nil
 }
 
-// GetTopTags gets the top tags for an artist from the Last.FM API
-func (c *Client) GetTopTags(mbid string) ([]string, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=artist.gettoptags&mbid=%s&api_key=%s&format=json", mbid, c.APIKey), nil)
+// GetTopTags gets the top tags for an artist from the Last.FM API by mbid, or artist as a fallback
+func (c *Client) GetTopTags(mbid string, artist string) ([]string, error) {
+	if mbid == "" {
+		return c.getTopTags("artist", artist)
+	}
+	return c.getTopTags("mbid", mbid)
+}
+
+func (c *Client) getTopTags(by string, value string) ([]string, error) {
+	call := fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=artist.gettoptags&api_key=%s&format=json", c.APIKey)
+	u, err := url.Parse(call)
+	if err != nil {
+		return nil, err
+	}
+	q := u.Query()
+	switch by {
+	case "mbid":
+		q.Add("mbid", value)
+	default:
+		q.Add("artist", value)
+	}
+	u.RawQuery = q.Encode()
+	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, err
 	}
